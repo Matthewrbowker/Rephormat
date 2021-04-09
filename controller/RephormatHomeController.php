@@ -16,24 +16,22 @@ class RephormatHomeController extends RephormatController
     $col1->addMenuItem(
       (new PHUIListItemView())
         ->setName("Active Imports")
-        ->setHref("/")
+        ->setHref($this->getApplicationURI())
         ->setType(PHUIListItemView::TYPE_LINK)
     );
 
     $col1->addMenuItem(
       (new PHUIListItemView())
         ->setName("All Imports")
-        ->setHref("all")
+        ->setHref($this->getApplicationURI("all"))
         ->setType(PHUIListItemView::TYPE_LINK)
     );
 
     $view->addColumn($col1);
 
-    $col2 = new PHUIPagerView();
+    $col2 = new PHUIListItemView();
 
-    $col2->setURI(new PhutilURI($this->getApplicationURI()), "offset");
-
-    new PHUIListItemView();
+    //$col2->setURI(new PhutilURI($this->getApplicationURI()), "offset");
 
     $view->addColumn($col2);
 

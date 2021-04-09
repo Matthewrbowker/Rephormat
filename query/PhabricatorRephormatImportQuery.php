@@ -1,7 +1,7 @@
 <?php
 
 
-class PhabricatorRephormatImportQuery extends PhabricatorQuery
+class PhabricatorRephormatImportQuery extends PhabricatorCursorPagedPolicyAwareQuery
 {
   private $ids;
 
@@ -12,18 +12,38 @@ class PhabricatorRephormatImportQuery extends PhabricatorQuery
     {
     }
 
+    public function newResultObject() {
+      return new RephormatImport();
+    }
+
     public function withIDs($ids) {
       $this->ids = $ids;
       return $this;
     }
 
-  public function execute()
-  {
+    protected function buildWhereClauseParts(AphrontDatabaseConnection $conn)
+    {
+      $where = parent::buildWhereClauseParts($conn);
 
-    if(isset($ids)) {
+      if ($this->ids !== null) {
+        $where[] = qsprintf(
+          $conn,
+          'import.ids in (%Ls)',
+          join(",",$this->ids));
+      }
+
+      return $where;
+    }
+
+    public function getQueryApplicationClass() {
+      return "PhabricatorRephormatApplication";
 
     }
-    return array();
-    // TODO: Implement execute() method.
+
+  protected function loadPage()
+  {
+    $table = $this->newResultObject();
+    $data = $this->loadStandardPageRows($table);
+    return $table->loadAllFromArray($data);
   }
 }

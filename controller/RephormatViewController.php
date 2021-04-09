@@ -9,7 +9,11 @@ class RephormatViewController extends RephormatController
     $id = $request->getURIData("id");
     $page = $this->newPage();
 
-    $data = (new PhabricatorRephormatImportQuery())->execute();
+    $data = (new PhabricatorRephormatImportQuery())
+      ->setViewer($this->getViewer())
+      ->execute();
+
+    var_dump($data);
 
     $page->setTitle("RI". $id);
 

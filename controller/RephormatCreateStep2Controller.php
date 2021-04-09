@@ -14,34 +14,22 @@ class RephormatCreateStep2Controller extends RephormatController {
     return $name;
   }
 
-  private function _jiraFormControls($form) {
-    return $form;
-  }
-
-  private function _githubFormControls($form) {
-    return $form;
-  }
-
   public function handleRequest(AphrontRequest $request) {
     $type = $request->getURIData('type');
     $type = strtolower($type);
     $stylizedName = $this->_getStylizedName($type);
 
-    $crumbs = $this->createCrumbs("Create: " . $stylizedName);
+    $crumbs = $this->createCrumbs(["Create", $stylizedName]);
 
     $services = new PHUIObjectBoxView();
 
     $services->setHeaderText($stylizedName);
 
-    $form = new AphrontFormView();
-
-    $form->setViewer($this->getViewer());
-
     if($type == "jira") {
-      $form = $this->_jiraFormControls($form);
+      $form = $this->createJiraForm();
     }
     elseif($type == "github") {
-      $form = $this->_githubFormControls($form);
+      $form = $this->createGithubForm();
     }
     else{
       return (new AphrontRedirectResponse())->setURI($this->getApplicationURI("create"));
