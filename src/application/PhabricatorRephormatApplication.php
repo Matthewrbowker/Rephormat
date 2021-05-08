@@ -24,7 +24,12 @@ class PhabricatorRephormatApplication extends PhabricatorApplication
       return "\xE2\x98\x88";
     }
 
-  public function getRoutes()
+    public function getShortDescription()
+    {
+        return "Import from other places.";
+    }
+
+    public function getRoutes()
     {
       return array(
         "/RI(?P<id>[1-9]\d*)" => "RephormatViewController",
