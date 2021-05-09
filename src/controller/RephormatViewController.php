@@ -9,21 +9,21 @@ class RephormatViewController extends RephormatController
     $id = $request->getURIData("id");
     $page = $this->newPage();
 
-    $data = (new PhabricatorRephormatImportQuery())
-      ->setViewer($this->getViewer())
-      ->execute();
+    //$data = (new PhabricatorRephormatImportQuery())
+    //  ->setViewer($this->getViewer())
+    //  ->execute();
 
-    var_dump($data);
+    //var_dump($data);
 
-    $page->setTitle("RI". $id);
+    $page->setTitle("Import ". $id);
 
     $header = new PHUIHeaderView();
 
-    $header->setHeader("RI" . $id);
+    $header->setHeader("Import " . $id);
 
     $header->addTag((new PHUITagView())
       ->setType(PHUITagView::TYPE_SHADE)
-      ->setName("RI" . $id)
+      ->setName("Import " . $id)
       ->setColor("grey"));
 
     $page->appendChild($header);

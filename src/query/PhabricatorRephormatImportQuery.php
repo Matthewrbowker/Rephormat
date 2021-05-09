@@ -37,7 +37,6 @@ class PhabricatorRephormatImportQuery extends PhabricatorCursorPagedPolicyAwareQ
 
     public function getQueryApplicationClass() {
       return "PhabricatorRephormatApplication";
-
     }
 
   protected function loadPage()

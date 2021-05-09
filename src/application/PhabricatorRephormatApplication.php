@@ -16,12 +16,12 @@ class PhabricatorRephormatApplication extends PhabricatorApplication
 
     public function getIcon()
     {
-      return "fa-arrows";
+      return "fa-exchange";
     }
 
     public function getTitleGlyph()
     {
-      return "\xE2\x98\x88";
+      return "\xE2\x87\x84";
     }
 
     public function getShortDescription()
@@ -32,7 +32,7 @@ class PhabricatorRephormatApplication extends PhabricatorApplication
     public function getRoutes()
     {
       return array(
-        "/RI(?P<id>[1-9]\d*)" => "RephormatViewController",
+        "/rephormat/import/(?P<id>[1-9]\d*)" => "RephormatViewController",
         "/rephormat/" => "RephormatHomeController",
         "/rephormat/create/(?P<type>[^/]+)/" => "RephormatCreateStep2Controller",
         "/rephormat/create/" => "RephormatCreateStep1Controller",

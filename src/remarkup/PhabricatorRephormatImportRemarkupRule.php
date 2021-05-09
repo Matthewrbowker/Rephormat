@@ -6,7 +6,7 @@ class PhabricatorRephormatImportRemarkupRule extends PhabricatorObjectRemarkupRu
 
     protected function getObjectNamePrefix()
     {
-        return "RI";
+        return "Import ";
     }
 
     protected function loadObjects(array $ids)
