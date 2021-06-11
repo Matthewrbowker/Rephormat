@@ -6,14 +6,14 @@ class PhabricatorRephormatImportRemarkupRule extends PhabricatorObjectRemarkupRu
 
     protected function getObjectNamePrefix()
     {
-        return "Import ";
+        return "RI";
     }
 
     protected function loadObjects(array $ids)
     {
       $viewer = $this->getEngine()->getConfig('viewer');
 
-      return id(new PhabricatorRephormatImportQuery)
+      return id(new ImportQuery())
         ->setViewer($viewer)
         ->withIDs($ids)
         ->execute();

@@ -4,7 +4,7 @@
 class RephormatImportEditEngine extends PhabricatorEditEngine
 {
 
-    const ENGINECONST = "report.import";
+    const ENGINECONST = "rephormat.import";
 
     public function getEngineApplicationClass()
     {

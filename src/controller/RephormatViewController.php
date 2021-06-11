@@ -7,28 +7,52 @@ class RephormatViewController extends RephormatController
   public function handleRequest(AphrontRequest $request)
   {
     $id = $request->getURIData("id");
-    $page = $this->newPage();
+    $page = id(new PHUITwoColumnView());
+    $viewer = $this->getViewer();
 
-    //$data = (new PhabricatorRephormatImportQuery())
-    //  ->setViewer($this->getViewer())
-    //  ->execute();
+    $data = id(new ImportQuery())
+      ->setViewer($this->getViewer())
+      ->withIDs($id)
+      ->executeOne();
 
-    //var_dump($data);
-
-    $page->setTitle("Import ". $id);
+      if(!$data) {
+          return new Aphront404Response();
+      }
 
     $header = new PHUIHeaderView();
 
-    $header->setHeader("Import " . $id);
+    $header->setUser($viewer);
 
-    $header->addTag((new PHUITagView())
-      ->setType(PHUITagView::TYPE_SHADE)
-      ->setName("Import " . $id)
-      ->setColor("grey"));
+    $header->setHeader($data->getName());
 
-    $page->appendChild($header);
+      $header->addTag((new PHUITagView())
+          ->setType(PHUITagView::TYPE_SHADE)
+          ->setName($data->getImportTypeStylized())
+          ->setColor("green"));
 
-    return $page;
+    $header->setPolicyObject($data);
+
+    if($data->getActive()) {
+        $header->setStatus('fa-check', 'bluegrey', pht('Active'));
+    } else {
+        $header->setStatus('fa-ban', 'indigo', pht('Archived'));
+    }
+
+    $box = id(new PHUIObjectBoxView())
+        ->setHeaderText(pht('Details'))
+        ->setBackground(PHUIObjectBoxView::BLUE_PROPERTY);
+        //->addPropertyList($property_list);
+
+    $page->setHeader($header);
+
+    $page->setMainColumn($box);
+
+    $page->setCurtain($this->newCurtainView($data));
+
+    return $this->newPage()
+        ->setTitle($data->getMonogram() . ": " . $data->getName())
+        ->setCrumbs($this->createCrumbs($data->getMonogram()))
+        ->appendChild($page);
   }
 
 }

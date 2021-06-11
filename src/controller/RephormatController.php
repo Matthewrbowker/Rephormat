@@ -1,11 +1,34 @@
 <?php
 
 
-class RephormatController extends PhabricatorController
+abstract class RephormatController extends PhabricatorController
 {
-  function createJiraForm() {
+  function createJiraForm($path = "") {
     $form = new AphrontFormView();
     $form->setViewer($this->getViewer());
+
+    $uriField = new AphrontFormTextControl();
+    $uriField->setName("uri");
+    $uriField->setLabel("URI");
+
+    $form->appendChild($uriField);
+
+    $usernameField = new AphrontFormTextControl();
+    $usernameField->setName("username");
+    $usernameField->setLabel("Username for Jira");
+
+    $form->appendChild($usernameField);
+
+    $passwordForm = new AphrontFormPasswordControl();
+    $passwordForm->setName("password");
+    $passwordForm->setLabel("Password for Jira");
+
+    $form->appendChild($passwordForm);
+
+      $form->appendChild(
+          (new AphrontFormSubmitControl())
+              ->addCancelButton($this->getApplicationURI($path))
+              ->setValue(pht('Continue')));
 
     return $form;
   }
@@ -48,35 +71,35 @@ class RephormatController extends PhabricatorController
     return $form;
   }
 
-  function createCrumbs($additional = null, $create = false) {
-    {
-      $crumbs = parent::buildApplicationCrumbs();
+  function createCrumbs($additional = null, $create = true)
+  {
+      {
+          $crumbs = parent::buildApplicationCrumbs();
 
-      if(is_array($additional)) {
-        foreach($additional as $link) {
-          $crumb = new PHUICrumbView();
-          $crumb->setHref($this->getApplicationURI(strtolower($link)));
-          $crumb->setName($link);
-          $crumbs->addCrumb($crumb);
-        }
+          if (is_array($additional)) {
+              foreach ($additional as $link) {
+                  $crumb = new PHUICrumbView();
+                  $crumb->setHref($this->getApplicationURI(strtolower($link)));
+                  $crumb->setName($link);
+                  $crumbs->addCrumb($crumb);
+              }
+          } elseif ($additional != null) {
+              $crumbs->addCrumb((new PHUICrumbView())->setName($additional));
+          }
+
+
+          $crumbs->setBorder(true);
+
+          if ($create) {
+              $crumbs->addAction(
+                  id(new PHUIListItemView())
+                      ->setName(pht('New Import'))
+                      ->setHref($this->getApplicationURI('create/'))
+                      ->setIcon('fa-plus'));
+          }
+
+
+          return $crumbs;
       }
-      elseif($additional != null) {
-        $crumbs->addCrumb((new PHUICrumbView())->setName($additional));
-      }
-
-
-      $crumbs->setBorder(true);
-
-      if($create) {
-        $crumbs->addAction(
-          id(new PHUIListItemView())
-            ->setName(pht('New Import'))
-            ->setHref($this->getApplicationURI('create/'))
-            ->setIcon('fa-plus'));
-      }
-
-
-      return $crumbs;
-    }
   }
 }

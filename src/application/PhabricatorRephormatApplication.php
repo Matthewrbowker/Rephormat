@@ -32,11 +32,10 @@ class PhabricatorRephormatApplication extends PhabricatorApplication
     public function getRoutes()
     {
       return array(
-        "/rephormat/import/(?P<id>[1-9]\d*)" => "RephormatViewController",
+        "/RI(?P<id>[1-9]\d*)" => "RephormatViewController",
         "/rephormat/" => "RephormatHomeController",
-        "/rephormat/create/(?P<type>[^/]+)/" => "RephormatCreateStep2Controller",
-        "/rephormat/create/" => "RephormatCreateStep1Controller",
-        //"/rephormat/<id>/continue/" => "RephormatImportStep2Controller",
+        '/rephormat/(?:query/(?P<queryKey>[^/]+)/)?' => "RephormatHomeController",
+        "/rephormat/create/" => "RephormatCreateController",
       );
     }
 
