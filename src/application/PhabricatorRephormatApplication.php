@@ -33,9 +33,11 @@ class PhabricatorRephormatApplication extends PhabricatorApplication
     {
       return array(
         "/RI(?P<id>[1-9]\d*)" => "RephormatViewController",
+        "/rephormat/(?P<id>[1-9]\d*)/continue" => "RephormatStep2Controller",
         "/rephormat/" => "RephormatHomeController",
         '/rephormat/(?:query/(?P<queryKey>[^/]+)/)?' => "RephormatHomeController",
         "/rephormat/create/" => "RephormatCreateController",
+        "/rephormat/edit/(?P<id>[1-9]\d*)" => "RephormatEditController",
       );
     }
 

@@ -8,6 +8,8 @@ implements PhabricatorPolicyInterface
     protected $authorPHID;
     protected $importType;
     protected $active;
+    protected $viewPolicy;
+    protected $editPolicy;
 
     public function getCapabilities() {
         return array(
@@ -21,7 +23,6 @@ implements PhabricatorPolicyInterface
     }
 
     public function getPolicy($capability) {
-        return true;
         switch ($capability) {
             case PhabricatorPolicyCapability::CAN_VIEW:
                 return $this->getViewPolicy();
@@ -46,15 +47,17 @@ implements PhabricatorPolicyInterface
         return "rephormat";
     }
 
-    public function getImportTypeStylized() {
-        $name = strtolower($this->importType);
-
-        $name = ucfirst($name);
-
-        if($name == "Github") {
-            $name = "GitHub";
+    public function getImportTypeStylized($type = "") {
+        if($type == "") {
+            $type = strtolower($this->importType);
         }
 
-        return $name . " " . pht("Import");
+        $type = ucfirst($type);
+
+        if($type == "Github") {
+            $type = "GitHub";
+        }
+
+        return $type . " " . pht("Import");
     }
 }

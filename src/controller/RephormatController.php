@@ -3,19 +3,21 @@
 
 abstract class RephormatController extends PhabricatorController
 {
-  function createJiraForm($path = "") {
+  function createJiraForm($path = "", $username = "") {
     $form = new AphrontFormView();
     $form->setViewer($this->getViewer());
 
     $uriField = new AphrontFormTextControl();
     $uriField->setName("uri");
     $uriField->setLabel("URI");
+    $uriField->setValue($path);
 
     $form->appendChild($uriField);
 
     $usernameField = new AphrontFormTextControl();
     $usernameField->setName("username");
     $usernameField->setLabel("Username for Jira");
+    $usernameField->setValue($username);
 
     $form->appendChild($usernameField);
 

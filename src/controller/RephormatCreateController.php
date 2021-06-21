@@ -3,39 +3,48 @@
 
 class RephormatCreateController extends RephormatController
 {
-      public function handleRequest(AphrontRequest $request)
-      {
+    public function handleRequest(AphrontRequest $request)
+    {
+        $viewer = $request->getUser();
         if ($request->isFormPost()) {
-          $v_type = $request->getStr('type');
 
-          if (in_array($v_type, ['jira', 'github'])) {
+            $step = (int)$request->getStr("step", 0);
 
-              $stylizedName = $this->_getStylizedName($v_type);
+            if ($step == 1) {
+                // Step 1: Enter credentials
+                $type = $request->getStr('type');
 
-              $crumbs = $this->createCrumbs(["Create"]);
+                if (in_array($type, ['jira', 'github'])) {
 
-              $services = new PHUIObjectBoxView();
+                    $stylizedName = (new RephormatImport())->getImportTypeStylized($type);
 
-              $services->setHeaderText($stylizedName);
+                    $crumbs = $this->createCrumbs(["Create"]);
 
-              if($v_type == "jira") {
-                  $form = $this->createJiraForm();
-              }
-              elseif($v_type == "github") {
-                  $form = $this->createGithubForm();
-              }
-              else{
-                  return (new AphrontRedirectResponse())->setURI($this->getApplicationURI("create"));
-              }
+                    $services = new PHUIObjectBoxView();
 
-              $services->appendChild($form);
+                    $services->setHeaderText($stylizedName);
 
-              return $this->newPage()
-                  ->setTitle("New Import: " . $stylizedName)
-                  ->setCrumbs($crumbs)
-                  ->appendChild($services);
+                    if ($type == "jira") {
+                        $form = $this->createJiraForm();
+                    } elseif ($type == "github") {
+                        $form = $this->createGithubForm();
+                    } else {
+                        return (new AphrontRedirectResponse())->setURI($this->getApplicationURI("create"));
+                    }
 
-          }
+                    $services->appendChild($form);
+
+                    return $this->newPage()
+                        ->setTitle("New Import: " . $stylizedName)
+                        ->setCrumbs($crumbs)
+                        ->appendChild($services);
+                }
+            } elseif ($step == 2) {
+                // Step 2: Save
+            } else {
+                return new Aphront404Response();
+            }
+
         }
 
         $crumbs = $this->createCrumbs("Create");
@@ -60,19 +69,28 @@ class RephormatCreateController extends RephormatController
         $form->appendControl($radio);
 
         $form->appendChild(
-          (new AphrontFormSubmitControl())
-          ->addCancelButton($this->getApplicationURI())
-          ->setValue(pht('Continue')));
+            (new AphrontFormTextControl())
+                ->setHidden(true)
+                ->setName("step")
+                ->setValue(1)
+        );
 
-        $services = new PHUIObjectBoxView();
+        $form->appendChild(
+            (new AphrontFormSubmitControl())
+                ->addCancelButton($this->getApplicationURI())
+                ->setValue(pht('Continue')));
 
-        $services->setHeaderText("New Import");
+        $box = id(new PHUIObjectBoxView())
+            ->setHeaderText("New Import")
+            ->setBackground(PHUIObjectBoxView::WHITE_CONFIG)
+            ->setValidationException()
+            ->appendChild($form);
 
-        $services->setForm($form);
+        $crumbs->setBorder(true);
 
         return $this->newPage()
-          ->setTitle("New Import")
-          ->setCrumbs($crumbs)
-          ->appendChild($services);
-      }
+            ->setTitle("New Import")
+            ->setCrumbs($crumbs)
+            ->appendChild($box);
+    }
 }

@@ -1,14 +1,14 @@
 <?php
 
 
-class RephormatImportPHIDType extends PhabricatorPHIDType
+class RephormatImportCredentialsJiraPHIDType extends PhabricatorPHIDType
 {
 
-  const TYPECONST = "REIM";
+    const TYPECONST = "RECJ";
 
     public function getTypeName()
     {
-        return pht("Rephormat Import");
+        return "Rephormat Import Jira Credentials";
     }
 
     /**
@@ -16,7 +16,7 @@ class RephormatImportPHIDType extends PhabricatorPHIDType
      */
     public function getPHIDTypeApplicationClass()
     {
-        return 'PhabricatorRephormatApplication';
+        return "PhabricatorRephormatApplication";
     }
 
     /**
@@ -24,8 +24,7 @@ class RephormatImportPHIDType extends PhabricatorPHIDType
      */
     protected function buildQueryForObjects(PhabricatorObjectQuery $query, array $phids)
     {
-        return id(new ImportQuery())
-            ->withPHIDs($phids);
+        // TODO: Implement buildQueryForObjects() method.
     }
 
     /**

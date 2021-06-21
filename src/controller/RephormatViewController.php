@@ -47,7 +47,45 @@ class RephormatViewController extends RephormatController
 
     $page->setMainColumn($box);
 
-    $page->setCurtain($this->newCurtainView($data));
+    $curtain = $this->newCurtainView();
+
+      $curtain->addAction(
+          id(new PhabricatorActionView())
+              ->setName(pht('Continue Import'))
+              ->setIcon('fa-arrow-right')
+              ->setHref($this->getApplicationURI($data->getID() . "/continue"))
+//              ->setWorkflow(!$can_edit)
+//              ->setDisabled(!$can_edit));
+            );
+
+      $curtain->addAction(
+          id(new PhabricatorActionView())
+              ->setName(pht('Edit Import'))
+              ->setIcon('fa-pencil')
+              ->setHref($this->getApplicationURI('edit/'.$data->getID()))
+//              ->setWorkflow(!$can_edit)
+//              ->setDisabled(!$can_edit));
+            );
+
+      if($data->getActive()) {
+          $curtain->addAction(
+              id(new PhabricatorActionView())
+                  ->setName(pht('Archive Import'))
+                  ->setIcon('fa-ban')
+                  ->setHref($this->getApplicationURI("archive/{$id}"))
+//                  ->setDisabled(!$can_edit)
+                  ->setWorkflow(true));
+      } else {
+          $curtain->addAction(
+              id(new PhabricatorActionView())
+                  ->setName(pht('Activate Import'))
+                  ->setIcon('fa-check')
+                  ->setHref($this->getApplicationURI("activate/{$id}"))
+//                  ->setDisabled(!$can_edit)
+                  ->setWorkflow(true));
+      }
+
+    $page->setCurtain($curtain);
 
     return $this->newPage()
         ->setTitle($data->getMonogram() . ": " . $data->getName())

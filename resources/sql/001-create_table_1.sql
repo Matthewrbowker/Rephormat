@@ -5,6 +5,8 @@ CREATE TABLE {$NAMESPACE}_rephormat.rephormat_import (
     phid varchar(64) binary not null,
     importType varchar(20) not null,
     authorPHID varchar(64) binary not null,
+    viewPolicy varchar(64) not null,
+    editPolicy varchar(64) not null,
     dateCreated int unsigned not null,
     dateModified int unsigned not null,
     active int unsigned not null default false
